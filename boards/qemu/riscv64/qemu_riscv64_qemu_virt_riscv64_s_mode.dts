@@ -15,8 +15,8 @@
 		zephyr,sram = &ram1;
 	};
 
-	ram1: memory@80200000 {
+	ram1: memory@83000000 {
 		device_type = "memory";
-		reg = < 0x80200000 0x100000 >;
+		reg = < 0x83000000 0x100000 >;
 	};
 };

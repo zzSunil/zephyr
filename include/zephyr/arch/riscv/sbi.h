@@ -9,6 +9,7 @@
 #define ZEPHYR_INCLUDE_ARCH_RISCV_SBI_H
 
 #include "sbi_ecall_interface.h"
+#include <stdint.h>
 
 typedef struct sbi_ret{
 	int32_t error;
@@ -33,6 +34,17 @@ static inline sbi_ret_t sbi_set_timer(uint64_t time_value)
 static inline sbi_ret_t sbi_hsm_hart_start(uint64_t hartid)
 {
 	return sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_START, hartid, CONFIG_SRAM_BASE_ADDRESS, 1, 0, 0, 0);
+}
+
+static inline sbi_ret_t sbi_send_ipi(unsigned int cpu)
+{
+	return sbi_ecall(SBI_EXT_IPI, SBI_EXT_IPI_SEND_IPI,
+			1UL, cpu, 0, 0, 0, 0);
+}
+
+static inline sbi_ret_t sbi_hsm_hart_stop(void)
+{
+	return sbi_ecall(SBI_EXT_HSM, SBI_EXT_HSM_HART_STOP, 0, 0, 0, 0, 0, 0);
 }
 
 #endif /* OPENSBI_H */

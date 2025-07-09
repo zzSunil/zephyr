@@ -290,6 +290,11 @@ SECTIONS
 		  __bss_end = ALIGN(4);
 	}  GROUP_DATA_LINK_IN(RAMABLE_REGION, RAMABLE_REGION)
 
+    .resource_table : ALIGN(8)
+    {
+        KEEP(*(.resource_table*))
+    }   GROUP_DATA_LINK_IN(RAMABLE_REGION, RAMABLE_REGION)
+
 #include <zephyr/linker/common-noinit.ld>
 
     SECTION_DATA_PROLOGUE(_DATA_SECTION_NAME,,)

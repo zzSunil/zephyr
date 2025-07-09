@@ -13,6 +13,7 @@ CONFIG_QEMU_ICOUNT=n
 CONFIG_RISCV_SBI_BOOT=y
 # Run zephyr in Supervisor mode
 CONFIG_RISCV_S_MODE=y
+CONFIG_RV_BOOT_HART=2
 CONFIG_RISCV_MACHINE_TIMER=n
 CONFIG_RISCV_SUPERVISOR_TIMER=y
 # options that have to be disabled by now

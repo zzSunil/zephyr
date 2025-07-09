@@ -25,6 +25,7 @@
 #include <ksched.h>
 #include <kthread.h>
 #include <string.h>
+#include <mica.h>
 #include <zephyr/sys/dlist.h>
 #include <kernel_internal.h>
 #include <zephyr/drivers/entropy.h>
@@ -663,6 +664,7 @@ FUNC_NORETURN void z_cstart(void)
 
 	/* perform basic hardware initialization */
 	z_sys_init_run_level(INIT_LEVEL_PRE_KERNEL_1);
+	mica_init();
 #if defined(CONFIG_SMP)
 	arch_smp_init();
 #endif
