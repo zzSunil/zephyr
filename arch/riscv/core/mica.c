@@ -4,7 +4,8 @@
 #include <zephyr/sys/atomic.h>
 #include <zephyr/arch/riscv/irq.h>
 #include <zephyr/arch/riscv/sbi.h>
-#define IPI_MCS			0x09
+#define IPI_MCS			0x01
+#define CPU_OFF_FUNCID     0x84000002
 
 #define OS_SEC_RSC_TABLE __attribute__((section(".resource_table")))
 OS_SEC_RSC_TABLE static struct fw_resource_table resource_table = {
@@ -12,9 +13,6 @@ OS_SEC_RSC_TABLE static struct fw_resource_table resource_table = {
     .num = 2,
     .offset = {
         offsetof(struct fw_resource_table, ept_table),
-#ifdef OS_GDB_STUB
-        offsetof(struct fw_resource_table, rbufs),
-#endif
         offsetof(struct fw_resource_table, vdev),
     },
 
@@ -41,19 +39,30 @@ void rsc_table_get(void **table_ptr, int *length)
 void mica_ipi_handler(const void *unused)
 {
 	csr_read_clear(xip, 1 << 1);
-	printk("xcause 0x%lx\n",csr_read(xcause));
+
+	void *rsc;
+	int rsc_size;
+	uint32_t status;
+	struct fw_resource_table *rsc_table;
+
+	rsc_table_get(&rsc, &rsc_size);
+	rsc_table = (struct fw_resource_table *)rsc;
+	status = rsc_table->reserved[0];
+
+	printk("xcause 0x%lx status 0x%x\n",csr_read(xcause),status);
 	printk("*************************\n");
 	printk("* mica recive interrupt *\n");
 	printk("*************************\n");
-	sbi_hsm_hart_stop();
+
+	if(status == CPU_OFF_FUNCID){
+		sbi_hsm_hart_stop();
+	}
 }
 
 int mica_init(void)
 {
-	IRQ_CONNECT(1, 0, mica_ipi_handler, NULL, 0);
-	irq_enable(1);
-
-	printk("init mica irq\n");
+	IRQ_CONNECT(IPI_MCS, 0, mica_ipi_handler, NULL, 0);
+	irq_enable(IPI_MCS);
 
 	return 0;
 }

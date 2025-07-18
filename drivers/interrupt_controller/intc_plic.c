@@ -407,21 +407,21 @@ static int plic_init(const struct device *dev)
 	mem_addr_t prio_addr = config->prio;
 
 	/* Iterate through each of the contexts, HART + PRIV */
-//	for (uint32_t cpu_num = 0; cpu_num < arch_num_cpus(); cpu_num++) {
-//		cpu_num = 2;
-//		en_addr = get_context_en_addr(dev, cpu_num);
-//		thres_prio_addr = get_threshold_priority_addr(dev, cpu_num);
-//
-//		/* Ensure that all interrupts are disabled initially */
-//		for (uint32_t i = 0; i < get_plic_enabled_size(dev); i++) {
-//			sys_write32(0xFFFFFFFFU, en_addr + (i * sizeof(uint32_t)));
-//		}
-//
-//		/* Set threshold priority to 0 */
-//		sys_write32(0U, thres_prio_addr);
-//	}
+	for (uint32_t cpu_num = 0; cpu_num < arch_num_cpus(); cpu_num++) {
+		cpu_num = 2;
+		en_addr = get_context_en_addr(dev, cpu_num);
+		thres_prio_addr = get_threshold_priority_addr(dev, cpu_num);
 
-	/* Set priority of each interrupt line to 0 initially */
+		/* Ensure that all interrupts are disabled initially */
+		for (uint32_t i = 0; i < get_plic_enabled_size(dev); i++) {
+			sys_write32(0xFFFFFFFFU, en_addr + (i * sizeof(uint32_t)));
+		}
+
+		/* Set threshold priority to 0 */
+		sys_write32(0U, thres_prio_addr);
+	}
+
+	/* Set priority of each interrupt line to 0 initially
 	/**for (uint32_t i = 0; i < config->num_irqs; i++) {*/
 	/**        sys_write32(0U, prio_addr + (i * sizeof(uint32_t)));*/
 	/**}*/
