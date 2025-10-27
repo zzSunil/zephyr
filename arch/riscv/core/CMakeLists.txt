@@ -11,6 +11,7 @@ zephyr_library_sources(
   reset.S
   switch.S
   thread.c
+  mica.c
 )
 
 if ((CONFIG_MP_MAX_NUM_CPUS GREATER 1) OR (CONFIG_SMP))

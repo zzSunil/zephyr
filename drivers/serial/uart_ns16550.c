@@ -880,10 +880,15 @@ static int uart_ns16550_init(const struct device *dev)
 #endif
 	}
 #endif
+
+	volatile uint32_t *uart0_ctrl_base_0 = 0xC08800D8;
+	*uart0_ctrl_base_0 = 0x00000007;
+
 	ret = uart_ns16550_configure(dev, &data->uart_config);
 	if (ret != 0) {
 		return ret;
 	}
+
 
 #ifdef CONFIG_UART_INTERRUPT_DRIVEN
 	dev_cfg->irq_config_func(dev);
